@@ -25,9 +25,9 @@ class TaskSeeder extends Seeder
             $project = Project::inRandomOrder()->first();
             Task::create([
                 "project_id" => $project->id,
-                "created_by" => $project->created_by,
+                "created_by" => User::role("product_owner")->inRandomOrder()->first()->id,
                 "title" => $faker->sentence(),
-                "description" => $faker->paragraph(),
+                "description" => $faker->sentence(10),
                 "due_date" => $faker->dateTimeBetween(now(), "+3 days"),
             ]);
         }

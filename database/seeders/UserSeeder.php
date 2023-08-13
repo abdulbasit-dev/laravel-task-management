@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
             // and rest of the user assign the role of tester
 
             if ($index == 1 || $index == 2) {
-                $user->assignRole("product-owner");
+                $user->assignRole("product_owner");
             } elseif ($index >= 3 && $index <= 6) {
                 $user->assignRole("developer");
             } else {
