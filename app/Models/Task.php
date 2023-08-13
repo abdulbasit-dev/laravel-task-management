@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\TaskStatus;
+use App\Traits\ActionByTrait;
+use Illuminate\Database\Eloquent\Model;
+
+class Task extends Model
+{
+    use ActionByTrait;
+
+    protected $casts = [
+        'due_date' => 'datetime',
+        "status" => TaskStatus::class,
+    ];
+
+    protected $guarded = [];
+
+    // relations
+    public function assignTo()
+    {
+        return $this->belongsTo(User::class, "assign_to");
+    }
+
+    public function subTasks()
+    {
+        return $this->hasMany(SubTask::class, "task_id");
+    }
+
+    public function logs() {
+        return $this->hasMany(TaskLog::class, "task_id");
+    }
+
+}
