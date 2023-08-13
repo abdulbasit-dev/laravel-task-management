@@ -20,6 +20,23 @@ class UserSeeder extends Seeder
         $faker = Factory::create();
 
         foreach (range(1, 10) as $index) {
+
+            if($index == 1){
+                $name = "basit";
+                $user = User::firstOrCreate(
+                    [
+                        "email" => strtolower($name) . "@" . strtolower(str_replace(' ', '', config("app.name"))) . ".com",
+                    ],
+                    [
+                        "name" => $name,
+                        "password" => bcrypt("password"),
+                    ]
+                );
+                $user->assignRole("product_owner");
+                continue;
+            }
+
+
             $name = $faker->firstName();
             $user = User::firstOrCreate(
                 [
