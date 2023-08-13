@@ -18,6 +18,11 @@ class Task extends Model
     protected $guarded = [];
 
     // relations
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     public function assignTo()
     {
         return $this->belongsTo(User::class, "assign_to");
