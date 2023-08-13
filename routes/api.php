@@ -55,6 +55,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('task-statuses', TaskStatusController::class);
 
         // tasks
+        Route::post('tasks/{task}/assign-task', [TaskController::class, 'assignTask']);
+        Route::post('tasks/{task}/change-status', [TaskController::class, 'changeStatus']);
         Route::apiResource('tasks', TaskController::class);
 
         // subtasks

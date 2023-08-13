@@ -22,7 +22,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->jsonResponse(false, __('Invalid inputs'), Response::HTTP_UNPROCESSABLE_ENTITY, null, $validator->errors()->all());
+            return $this->jsonResponse(false, __('The given data was invalid.'), Response::HTTP_UNPROCESSABLE_ENTITY, null, $validator->errors()->all());
         }
 
         $credentials = $request->all();
