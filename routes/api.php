@@ -3,8 +3,11 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
-use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
-use App\Http\Controllers\Api\V1\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\V1\{
+    RoleController,
+    UserController
+};
+
 use Illuminate\Support\Facades\Artisan;
 
 //API V1
@@ -35,12 +38,12 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post("logout", [AuthController::class, 'logout']);
         });
 
-        //profile
-        Route::get('/profiles', [ProfileController::class, 'showProfile']);
-        Route::put('/profiles/update-info', [ProfileController::class, 'updateInfo']);
-        Route::post('/profiles/update-image', [ProfileController::class, 'updateImage']);
+
+        // roles
+        Route::get("roles", RoleController::class);
 
         // users
+        Route::apiResource('users', UserController::class);
 
         // tasks
 
