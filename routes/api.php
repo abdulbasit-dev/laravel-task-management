@@ -25,20 +25,15 @@ Route::group(['prefix' => 'v1'], function () {
 
     // auth
     Route::group(["prefix" => "auth"], function () {
-        Route::post('/login', [AuthController::class, 'login']);
-        // Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:60,10');
-        Route::post('/register', [AuthController::class, 'register']);
-        Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPasswordRequest']);
-        Route::post('/forgot-password-verify', [ForgotPasswordController::class, 'forgotPasswordVerify']);
+        Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:60,10');;
     });
-
 
     /*=====PROTECTED ROUTES=====*/
     Route::group(['middleware' => 'auth:sanctum'], function () {
-
         // auth
-        Route::post("logout", [AuthController::class, 'logout']);
-        Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);
+        Route::group(["prefix" => "auth"], function () {
+            Route::post("logout", [AuthController::class, 'logout']);
+        });
 
         //profile
         Route::get('/profiles', [ProfileController::class, 'showProfile']);
