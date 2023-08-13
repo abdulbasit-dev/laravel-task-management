@@ -41,7 +41,7 @@ class RolePermissionSeeder extends Seeder
             ]);
         }
 
-        $roles = ["product-owner", "developer", "tester"];
+        $roles = ["product_owner", "developer", "tester"];
 
         foreach ($roles as $role) {
             Role::firstOrCreate([
