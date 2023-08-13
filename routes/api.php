@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\{
+    ProjectController,
     RoleController,
-    UserController
+    UserController,
+    TaskStatusController,
+    TaskController,
 };
 
 use Illuminate\Support\Facades\Artisan;
@@ -45,7 +48,14 @@ Route::group(['prefix' => 'v1'], function () {
         // users
         Route::apiResource('users', UserController::class);
 
+        // projects
+        Route::apiResource('projects', ProjectController::class);
+
+        // task-statuses
+        Route::get('task-statuses', TaskStatusController::class);
+
         // tasks
+        Route::apiResource('tasks', TaskController::class);
 
         // subtasks
 

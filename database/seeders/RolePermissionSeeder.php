@@ -21,6 +21,11 @@ class RolePermissionSeeder extends Seeder
             "edit_user",
             "delete_user",
 
+            "view_project",
+            "add_project",
+            "edit_project",
+            "delete_project",
+
             "view_task",
             "add_task",
             "edit_task",

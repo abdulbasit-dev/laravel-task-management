@@ -45,7 +45,7 @@ enum TaskStatus: int
     public function getLabelText(): string
     {
         return match ($this) {
-            self::TODO             => "To Do",
+            self::TODO             => "Todo",
             self::IN_PROGRESS      => "In Progress",
             self::READY_FOR_TEST   => "Ready For Test",
             self::PO_REVIEW        => "PO Review",
