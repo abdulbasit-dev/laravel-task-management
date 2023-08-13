@@ -48,5 +48,9 @@ class RolePermissionSeeder extends Seeder
                 'name' => $role,
             ]);
         }
+
+        // assign all permission to product owner
+        $productOwner = Role::findByName("product_owner");
+        $productOwner->givePermissionTo($permissions);
     }
 }
