@@ -7,14 +7,14 @@ use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 
 
-class ExportTaskCommand extends Command
+class ExportTasksCommand extends Command
 {
     protected $signature = 'tasks:export';
     protected $description = 'Export tasks to a CSV file';
 
     public function handle()
     {
-        $filename = 'exports/tasks_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        $filename = 'exports/tasks_' . now()->format('Y-m-d_H-i-s') . '.csv';
 
         try {
             $path = storage_path('app/' . $filename);

@@ -53,4 +53,17 @@ enum TaskStatus: int
             self::REJECTED         => "Rejected",
         };
     }
+
+    // get from value based on name
+    public static function fromName(string $name): self
+    {
+        return match ($name) {
+            "TODO"             => self::TODO,
+            "IN_PROGRESS"      => self::IN_PROGRESS,
+            "READY_FOR_TEST"   => self::READY_FOR_TEST,
+            "PO_REVIEW"        => self::PO_REVIEW,
+            "DONE"             => self::DONE,
+            "REJECTED"         => self::REJECTED,
+        };
+    }
 }
