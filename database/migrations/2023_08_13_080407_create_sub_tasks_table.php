@@ -11,8 +11,12 @@ return new class extends Migration
         Schema::create('sub_tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignId("task_id")->constrained("tasks")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("assign_to")->nullable()->constrained("users")->nullOnDelete()->cascadeOnUpdate();
             $table->text("title");
-            $table->text("description")->nullable();
+            $table->longText("description")->nullable();
+            $table->timestamp("due_date")->nullable();
+            $table->foreignId("created_by")->nullable()->constrained("users")->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId("updated_by")->nullable()->constrained("users")->nullOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }
