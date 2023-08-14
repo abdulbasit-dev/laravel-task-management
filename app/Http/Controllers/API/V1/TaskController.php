@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\TaskStatus;
+use App\Events\TaskDueDatePassedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
@@ -30,8 +31,6 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorize('view_task');
-
         $searchParams = $request->all();
 
         // get search parameters from request
@@ -87,8 +86,6 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        $this->authorize('view_task');
-
         $task->load("subTasks:id,task_id,title,description,due_date");
 
         return new TaskResource($task);
@@ -198,8 +195,15 @@ class TaskController extends Controller
             $currentStatus = $task->status->name;
             $requestedStatus = $request->status;
 
-            if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
-                return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY);
+            // if requested status is REJECTED and role is not product owner then he can change to any status
+            if ($requestedStatus != 'REJECTED' && $userRole != 'Product Owner') {
+                if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
+                    return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY, [
+                        "user_role" => $userRole,
+                        "current_status" => $currentStatus,
+                        "requested_status" => $requestedStatus,
+                    ]);
+                }
             }
 
             // if task status us PO_REVIEW then assign task to product owner
