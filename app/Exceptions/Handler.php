@@ -93,7 +93,7 @@ class Handler extends ExceptionHandler
             }
         });
 
-        // //for all other exception
+        // for all other exception
         $this->renderable(function (Throwable $e, $request) {
             $this->status = Response::HTTP_INTERNAL_SERVER_ERROR;
             if ($request->wantsJson() || $request->is('api/*')) {

@@ -30,8 +30,6 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorize('view_task');
-
         $searchParams = $request->all();
 
         // get search parameters from request
@@ -87,8 +85,6 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        $this->authorize('view_task');
-
         $task->load("subTasks:id,task_id,title,description,due_date");
 
         return new TaskResource($task);
@@ -199,7 +195,10 @@ class TaskController extends Controller
             $requestedStatus = $request->status;
 
             if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
-                return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY, [
+                    "user_role" => $userRole,
+                    "current_status" => $currentStatus,
+                ]);
             }
 
             // if task status us PO_REVIEW then assign task to product owner

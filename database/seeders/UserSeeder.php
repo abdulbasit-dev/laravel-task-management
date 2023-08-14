@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
 
         foreach (range(1, 10) as $index) {
 
-            if($index == 1){
+            if ($index == 1) {
                 $name = "basit";
                 $user = User::firstOrCreate(
                     [
@@ -35,6 +35,38 @@ class UserSeeder extends Seeder
                 $user->assignRole("product_owner");
                 continue;
             }
+
+
+            if ($index == 4) {
+                $name = "developer";
+                $user = User::firstOrCreate(
+                    [
+                        "email" => strtolower($name) . "@" . strtolower(str_replace(' ', '', config("app.name"))) . ".com",
+                    ],
+                    [
+                        "name" => $name,
+                        "password" => bcrypt("password"),
+                    ]
+                );
+                $user->assignRole("developer");
+                continue;
+            }
+
+            if ($index == 7) {
+                $name = "tester";
+                $user = User::firstOrCreate(
+                    [
+                        "email" => strtolower($name) . "@" . strtolower(str_replace(' ', '', config("app.name"))) . ".com",
+                    ],
+                    [
+                        "name" => $name,
+                        "password" => bcrypt("password"),
+                    ]
+                );
+                $user->assignRole("tester");
+                continue;
+            }
+
 
 
             $name = $faker->firstName();
