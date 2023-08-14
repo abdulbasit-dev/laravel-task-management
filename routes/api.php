@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\V1\{
 use Illuminate\Support\Facades\Artisan;
 
 //API V1
-Route::group(['prefix' => 'v1'], function () {
+Route::group(['prefix' => 'v1', "middleware"=>["throttle:30,1"]], function () {
     /*======PUBLIC ROUTES=====*/
 
     //Clear all cache
@@ -31,7 +31,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     // auth
     Route::group(["prefix" => "auth"], function () {
-        Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:60,10');;
+        Route::post('/login', [AuthController::class, 'login']);
     });
 
     /*=====PROTECTED ROUTES=====*/
