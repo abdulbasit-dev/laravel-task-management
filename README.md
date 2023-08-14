@@ -35,7 +35,11 @@ We have already set up email sending in this project, and we're using MailTrap, 
 
 3. **Check Received Emails:** In the MailTrap inbox, you'll find the emails that have been sent from the application. You can inspect the content, headers, and attachments of these emails.
 
-
+4. **Queue Worker (Important):** To ensure that emails are sent correctly and asynchronously, run the following command in your terminal:
+   ```shell
+   php artisan queue:work
+   ```
+   This command starts the Laravel queue worker, which processes jobs in the background. It's essential for sending emails and performing other queued tasks.
 ## Laravel Sponsors
 
 We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
