@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -179,28 +180,27 @@ class TaskController extends Controller
         }
 
         try {
-            // $userRole = auth()->user()->getRoleNames()->first();
-            // // transform role name to title case
-            // $userRole = str_replace('_', ' ', Str::title($userRole));
+            $userRole = auth()->user()->getRoleNames()->first();
+            // transform role name to title case
+            $userRole = str_replace('_', ' ', Str::title($userRole));
 
-            // // Define allowed transitions for each role
-            // $allowedTransitions = [
-            //     'Developer' => ['TODO' => 'IN_PROGRESS', 'IN_PROGRESS' => 'READY_FOR_TEST'],
-            //     'Tester' => ['READY_FOR_TEST' => 'PO_REVIEW'],
-            //     'Product Owner' => ['PO_REVIEW' => 'DONE', 'DONE' => 'IN_PROGRESS'],
-            // ];
+            // Define allowed transitions for each role
+            $allowedTransitions = [
+                'Developer' => ['TODO' => 'IN_PROGRESS', 'IN_PROGRESS' => 'READY_FOR_TEST'],
+                'Tester' => ['READY_FOR_TEST' => 'PO_REVIEW'],
+                'Product Owner' => ['PO_REVIEW' => 'DONE', 'DONE' => 'IN_PROGRESS'],
+            ];
 
-            // if (!array_key_exists($userRole, $allowedTransitions)) {
-            //     return $this->jsonResponse(false, __('User role is not allowed to change task status.'), Response::HTTP_FORBIDDEN);
-            // }
+            if (!array_key_exists($userRole, $allowedTransitions)) {
+                return $this->jsonResponse(false, __('User role is not allowed to change task status.'), Response::HTTP_FORBIDDEN);
+            }
 
-            // $currentStatus = $task->status;
-            // $requestedStatus = $request->status;
+            $currentStatus = $task->status->name;
+            $requestedStatus = $request->status;
 
-            // if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
-            //     return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY);
-            // }
-
+            if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
+                return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             // if task status us PO_REVIEW then assign task to product owner
             switch ($request->status) {
