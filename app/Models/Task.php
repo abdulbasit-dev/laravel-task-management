@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Enums\TaskStatus;
 use App\Traits\ActionByTrait;
+use App\Traits\AssignToTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    use ActionByTrait;
+    use ActionByTrait, AssignToTrait;
 
     protected $casts = [
         'due_date' => 'datetime',
@@ -21,11 +22,6 @@ class Task extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
-    }
-
-    public function assignTo()
-    {
-        return $this->belongsTo(User::class, "assign_to");
     }
 
     public function subTasks()
