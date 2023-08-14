@@ -42,6 +42,7 @@ class TaskResource extends JsonResource
                     return [
                         "title" => $log->title,
                         "description" => $log->description,
+                        "assign_to" => $log->assign_to,
                         "status" => $log->status->name,
                         "due_date"=> $log->due_date->format('Y-m-d H:i:s'),
                         "action_by" => $log->actionBy->name ?? null,

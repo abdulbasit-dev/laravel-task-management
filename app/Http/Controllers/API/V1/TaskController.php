@@ -40,7 +40,7 @@ class TaskController extends Controller
         $assignedTo = Arr::get($searchParams, "assigned_to", null);
 
         $tasks = Task::query()
-            ->with("assignTo:id,name","logs")
+            ->with("assignTo:id,name", "logs")
             ->when($id, function ($query, $id) {
                 return $query->where("id", $id);
             })
@@ -201,10 +201,36 @@ class TaskController extends Controller
             //     return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY);
             // }
 
+
+            // if task status us PO_REVIEW then assign task to product owner
+            switch ($request->status) {
+                case 'PO_REVIEW':
+                    $task->assign_to = $task->created_by;
+                    break;
+
+                case "READY_FOR_TEST":
+                    // find the tester who has least number of tasks assigned
+                    $testerId = User::role('tester')->withCount('tasks')->orderBy('tasks_count', 'asc')->first()->id;
+                    $task->assign_to = $testerId;
+                    break;
+
+                    // if its READY FOR TEST or DONE then assign task to developer
+                case "DONE" || "IN_PROGRESS":
+                    $developerId = $task->logs()->where('status', 'TODO')
+                        ->orWhere('status', 'IN_PROGRESS')
+                        ->first()
+                        ->assign_to;
+                    $task->assign_to = $developerId;
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
             // Update task status
-            $task->update([
-                'status' => TaskStatus::fromName($request->status),
-            ]);
+            $task->status = TaskStatus::fromName($request->status);
+
+            $task->save();
 
             return $this->jsonResponse(true, __('Task status updated successfully!'), Response::HTTP_OK, $task);
         } catch (\Throwable $th) {

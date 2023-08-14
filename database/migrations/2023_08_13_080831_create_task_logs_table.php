@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('task_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId("task_id")->constrained("tasks")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("assign_to")->nullable()->constrained("users")->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId("action_by")->constrained("users")->cascadeOnDelete()->cascadeOnUpdate();
             $table->text("title")->nullable();
             $table->text("description")->nullable();
