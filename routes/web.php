@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Exports\TasksExport;
+use Illuminate\Console\Command;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +18,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $filename = 'tasks_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+
+    // Excel::store(new TasksExport(), $filename);
+
+    // $this->info("Tasks exported to {$filename}");
+    // return Excel::download(new TasksExport(), $filename);
+
     return view('welcome');
 });
