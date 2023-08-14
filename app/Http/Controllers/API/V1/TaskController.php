@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\TaskAssignmentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,14 +25,36 @@ class TaskController extends Controller
         $this->taskAssignmentService = $taskAssignmentService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('view_task');
 
+        $searchParams = $request->all();
+
+        // get search parameters from request
+        $id = Arr::get($searchParams, "id", null);
+        $title = Arr::get($searchParams, "title", null);
+        $description = Arr::get($searchParams, "description", null);
+        $assignedTo = Arr::get($searchParams, "assigned_to", null);
+
         $tasks = Task::query()
-        ->with("assignTo:id,name")
-        ->withCount("subTasks")
-        ->get();
+            ->with("assignTo:id,name")
+            ->when($id, function ($query, $id) {
+                return $query->where("id", $id);
+            })
+            ->when($title, function ($query, $title) {
+                return $query->where("title", "LIKE", "%$title%");
+            })
+            ->when($description, function ($query, $description) {
+                return $query->where("description", "LIKE", "%$description%");
+            })
+            ->when($assignedTo, function ($query, $assignedTo) {
+                return $query->whereHas("assignTo", function ($query) use ($assignedTo) {
+                    return $query->WhereIn("id", $assignedTo);
+                });
+            })
+            ->withCount("subTasks")
+            ->get();
 
         return new TaskCollection($tasks);
     }
@@ -184,5 +207,4 @@ class TaskController extends Controller
             throw $th;
         }
     }
-
 }

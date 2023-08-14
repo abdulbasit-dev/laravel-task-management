@@ -22,6 +22,8 @@ class TaskCollection extends ResourceCollection
                     'title' => $task->title,
                     "description" => $task->description,
                     "create_at" => $task->created_at->format('Y-m-d H:i:s'),
+                    "assign_to" => $task->assign_to,
+                    "assign_to_name" => $task->assignTo->name ?? "null",
                     "due_date" => $task->due_date->format('Y-m-d H:i:s'),
                     "status" => $task->status->getLabelText(),
                     "subtasks_count" => $task->sub_tasks_count,
