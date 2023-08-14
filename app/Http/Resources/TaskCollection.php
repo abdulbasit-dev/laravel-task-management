@@ -23,7 +23,8 @@ class TaskCollection extends ResourceCollection
                     "description" => $task->description,
                     "create_at" => $task->created_at->format('Y-m-d H:i:s'),
                     "due_date" => $task->due_date->format('Y-m-d H:i:s'),
-                    "status" => $task->status->getLabelText()
+                    "status" => $task->status->getLabelText(),
+                    "subtasks_count" => $task->sub_tasks_count,
                 ];
             }),
         ];

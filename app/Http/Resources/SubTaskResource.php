@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
-class TaskResource extends JsonResource
+class SubTaskResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,24 +18,14 @@ class TaskResource extends JsonResource
     {
         return [
             'result' => true,
-            'message' => "Task details.",
+            'message' => "Subtask details.",
             'status' => Response::HTTP_OK,
             'data' =>[
                 'id' => $this->id,
                 'title' => $this->title,
                 "description" => $this->description,
-                "created_at" => $this->created_at->format('Y-m-d H:i:s'),
                 "due_date" => $this->due_date->format('Y-m-d H:i:s'),
-                "status" => $this->status->name,
-                "subtasks_count" => $this->subTasks->count(),
-                "subtasks" => $this->subTasks->map(function ($subTask) {
-                    return [
-                        'id' => $subTask->id,
-                        'title' => $subTask->title,
-                        "description" => $subTask->description,
-                        "due_date" => $subTask->due_date->format('Y-m-d H:i:s'),
-                    ];
-                }),
+                "created_at" => $this->created_at->format('Y-m-d H:i:s'),
             ]
 
         ];

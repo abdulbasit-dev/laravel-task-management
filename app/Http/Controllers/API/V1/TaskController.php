@@ -18,7 +18,10 @@ class TaskController extends Controller
     {
         $this->authorize('view_task');
 
-        $tasks = Task::with("assignTo:id,name")->get();
+        $tasks = Task::query()
+        ->with("assignTo:id,name")
+        ->withCount("subTasks")
+        ->get();
 
         return new TaskCollection($tasks);
     }
@@ -49,6 +52,8 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $this->authorize('view_task');
+
+        $task->load("subTasks:id,task_id,title,description,due_date");
 
         return new TaskResource($task);
     }

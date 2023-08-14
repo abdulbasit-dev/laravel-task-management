@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class SubTask extends Model
 {
-
     use ActionByTrait, AssignToTrait;
 
     protected $guarded = [];
+
+    protected $casts = [
+        "due_date" => "datetime",
+    ];
 
     // relations
     public function task()

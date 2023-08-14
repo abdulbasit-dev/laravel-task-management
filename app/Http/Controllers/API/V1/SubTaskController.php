@@ -4,33 +4,33 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SubTaskRequest;
+use App\Http\Resources\SubTaskResource;
 use App\Models\SubTask;
 use App\Models\Task;
+use Illuminate\Http\Response;
 
 class SubTaskController extends Controller
 {
     public function store(SubTaskRequest $request, Task $task)
     {
-        $validated = $request->validated();
-        return $validated;
-        $task->tasks()->create($request->validated());
-        return redirect()->route('admin.checklist_groups.checklists.edit',  [$task->checklist_group_id, $task]);
+        $task->subTasks()->create($request->validated());
+        return $this->jsonResponse(true, __('Sub Task created successfully!'), Response::HTTP_CREATED);
     }
 
-    public function edit(Task $task, SubTask $subTask)
+    public function show(Task $task, SubTask $subtask)
     {
-        return view('admin.tasks.edit', compact('checklist', 'task'));
+        return new SubTaskResource($subtask);
     }
 
-    public function update(SubTaskRequest $request, Task $task, SubTask $subTask)
+    public function update(SubTaskRequest $request, Task $task, SubTask $subtask)
     {
-        $task->update($request->validated());
-        return redirect()->route('admin.checklist_groups.checklists.edit',  [$task->checklist_group_id, $task]);
+        $subtask->update($request->validated());
+        return $this->jsonResponse(true, __('Sub Task updated successfully!'), Response::HTTP_OK);
     }
 
-    public function destroy(Task $task, SubTask $subTask)
+    public function destroy(Task $task, SubTask $subtask)
     {
-        $task->delete();
-        return redirect()->route('admin.checklist_groups.checklists.edit',  [$task->checklist_group_id, $task]);
+        $subtask->delete();
+        return $this->jsonResponse(true, __('Task deleted successfully!'), Response::HTTP_OK);
     }
 }
