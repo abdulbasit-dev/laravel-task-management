@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\TaskStatus;
+use App\Events\TaskDueDatePassedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
@@ -30,6 +31,17 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
+
+        // search for task due date passed
+        $overDueTasks = Task::query()
+            ->where("due_date", "<=", now())
+            ->get();
+
+        foreach ($overDueTasks as $overDueTask) {
+            // fire event
+            TaskDueDatePassedEvent::dispatch($overDueTask);
+        }
+
         $searchParams = $request->all();
 
         // get search parameters from request

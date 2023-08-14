@@ -24,6 +24,7 @@ class Task extends Model
     protected static function booted(): void
     {
         static::saving(function (Task $task) {
+            // save log for task
             $task->logs()->create([
                 "title" => $task->title,
                 "description" => $task->description,
@@ -32,6 +33,8 @@ class Task extends Model
                 "action_by" => auth()->id(),
                 "assign_to" => $task->assign_to,
             ]);
+
+
         });
     }
 
