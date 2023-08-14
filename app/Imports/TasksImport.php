@@ -34,6 +34,7 @@ class TasksImport implements ToModel, WithStartRow, WithChunkReading
                 "project_id" => Project::inRandomOrder()->first()->id,
                 "status" => TaskStatus::fromName($row[3]),
                 "assign_to" => $row[4],
+                "due_date" => now()->addDays(rand(1, 30)),
             ]);
         } catch (Exception $e) {
             Log::error('An error occurred while creating the task: ' . $e->getMessage());

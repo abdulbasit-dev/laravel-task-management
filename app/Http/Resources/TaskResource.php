@@ -38,6 +38,16 @@ class TaskResource extends JsonResource
                         "due_date" => $subTask->due_date->format('Y-m-d H:i:s'),
                     ];
                 }),
+                "logs" => $this->logs->map(function ($log) {
+                    return [
+                        "title" => $log->title,
+                        "description" => $log->description,
+                        "status" => $log->status->name,
+                        "due_date"=> $log->due_date->format('Y-m-d H:i:s'),
+                        "action_by" => $log->actionBy->name ?? null,
+                        "created_at" => $log->created_at->format('Y-m-d H:i:s'),
+                    ];
+                }),
             ]
 
         ];
