@@ -21,13 +21,20 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Test Email Sending with MailTrap
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+We have already set up email sending in this project, and we're using MailTrap, a testing environment for catching and inspecting emails. You can check the emails we send from the application without signing up for MailTrap. We've provided the MailTrap credentials, so follow the steps below:
+
+1. **Visit MailTrap Inbox:** Open [MailTrap Inbox](https://mailtrap.io/inboxes/1432104/messages/3650415878) to view the emails sent from the application. This link will take you directly to the inbox where you can see the emails.
+
+2. **Login to MailTrap:** Use the following MailTrap login credentials to access the inbox:
+   - Email: basit99dev@gmail.com
+   - Password: 12345678
+
+3. **Check Received Emails:** In the MailTrap inbox, you'll find the emails that have been sent from the application. You can inspect the content, headers, and attachments of these emails.
+
 
 ## Laravel Sponsors
 
