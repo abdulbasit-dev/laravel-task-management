@@ -21,7 +21,6 @@ class Task extends Model
 
     protected $with = ["assignTo:id,name"];
 
-
     protected static function booted(): void
     {
         static::saving(function (Task $task) {
@@ -31,6 +30,7 @@ class Task extends Model
                 "status" => $task->status,
                 "due_date" => $task->due_date,
                 "action_by" => auth()->id(),
+                "assign_to" => $task->assign_to,
             ]);
         });
     }

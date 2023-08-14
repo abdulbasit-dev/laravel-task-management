@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Enums\TaskStatus;
+use App\Traits\AssignToTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class TaskLog extends Model
 {
+    use AssignToTrait;
 
     protected $casts = [
         "status" => TaskStatus::class,
@@ -25,4 +27,6 @@ class TaskLog extends Model
     {
         return $this->belongsTo(User::class, "action_by");
     }
+
+
 }
