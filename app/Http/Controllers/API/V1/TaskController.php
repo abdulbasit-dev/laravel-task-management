@@ -31,17 +31,6 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
-
-        // search for task due date passed
-        $overDueTasks = Task::query()
-            ->where("due_date", "<=", now())
-            ->get();
-
-        foreach ($overDueTasks as $overDueTask) {
-            // fire event
-            TaskDueDatePassedEvent::dispatch($overDueTask);
-        }
-
         $searchParams = $request->all();
 
         // get search parameters from request
@@ -196,7 +185,7 @@ class TaskController extends Controller
             $allowedTransitions = [
                 'Developer' => ['TODO' => 'IN_PROGRESS', 'IN_PROGRESS' => 'READY_FOR_TEST'],
                 'Tester' => ['READY_FOR_TEST' => 'PO_REVIEW'],
-                'Product Owner' => ['PO_REVIEW' => 'DONE', 'DONE' => 'IN_PROGRESS', "TODO" => "REJECTED", "IN_PROGRESS" => "REJECTED",  "READY_FOR_TEST" => "REJECTED", "PO_REVIEW" => "REJECTED", "DONE" => "REJECTED"],
+                'Product Owner' => ['PO_REVIEW' => 'DONE', 'DONE' => 'IN_PROGRESS'],
             ];
 
             if (!array_key_exists($userRole, $allowedTransitions)) {
@@ -206,11 +195,15 @@ class TaskController extends Controller
             $currentStatus = $task->status->name;
             $requestedStatus = $request->status;
 
-            if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
-                return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY, [
-                    "user_role" => $userRole,
-                    "current_status" => $currentStatus,
-                ]);
+            // if requested status is REJECTED and role is not product owner then he can change to any status
+            if ($requestedStatus != 'REJECTED' && $userRole != 'Product Owner') {
+                if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
+                    return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY, [
+                        "user_role" => $userRole,
+                        "current_status" => $currentStatus,
+                        "requested_status" => $requestedStatus,
+                    ]);
+                }
             }
 
             // if task status us PO_REVIEW then assign task to product owner

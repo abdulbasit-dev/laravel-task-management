@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TaskStatus;
+use App\Events\TaskDueDatePassedEvent;
 use App\Traits\ActionByTrait;
 use App\Traits\AssignToTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +35,15 @@ class Task extends Model
                 "assign_to" => $task->assign_to,
             ]);
 
+            // search for task due date passed
+            $overDueTasks = Task::query()
+                ->where("due_date", "<=", now())
+                ->get();
 
+            foreach ($overDueTasks as $overDueTask) {
+                // fire event
+                TaskDueDatePassedEvent::dispatch($overDueTask);
+            }
         });
     }
 
