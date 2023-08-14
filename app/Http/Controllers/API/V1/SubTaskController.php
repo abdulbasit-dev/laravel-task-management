@@ -7,7 +7,9 @@ use App\Http\Requests\SubTaskRequest;
 use App\Http\Resources\SubTaskResource;
 use App\Models\SubTask;
 use App\Models\Task;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class SubTaskController extends Controller
 {
@@ -19,6 +21,7 @@ class SubTaskController extends Controller
 
     public function show(Task $task, SubTask $subtask)
     {
+        $subtask->load("assignTo:id,name");
         return new SubTaskResource($subtask);
     }
 
@@ -32,5 +35,27 @@ class SubTaskController extends Controller
     {
         $subtask->delete();
         return $this->jsonResponse(true, __('Task deleted successfully!'), Response::HTTP_OK);
+    }
+
+    public function assignSubTask(Request $request, Task $task, SubTask $subtask)
+    {
+        //validation
+        $validator = Validator::make($request->all(), [
+            "user_id" => ['required', 'exists:users,id'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->jsonResponse(false, __("The given data was invalid."), Response::HTTP_UNPROCESSABLE_ENTITY, null, $validator->errors()->all());
+        }
+
+        try {
+            $subtask->update([
+                "assign_to" => $request->user_id,
+            ]);
+
+            return $this->jsonResponse(true, __('Task assigned successfully!'), Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

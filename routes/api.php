@@ -61,7 +61,7 @@ Route::group(['prefix' => 'v1', "middleware"=>["throttle:30,1"]], function () {
         Route::apiResource('tasks', TaskController::class);
 
         // subtasks
-        Route::post('tasks.subtasks/{task}/assign-subtask', [SubTaskController::class, 'assignSubTask']);
+        Route::post('tasks/{task}/subtasks/{subtask}/assign-subtask', [SubTaskController::class, 'assignSubTask']);
         Route::apiResource('tasks.subtasks', SubtaskController::class);
 
         // task transitions
