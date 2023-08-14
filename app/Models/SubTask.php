@@ -16,6 +16,8 @@ class SubTask extends Model
         "due_date" => "datetime",
     ];
 
+    protected $with = ["assignTo:id,name"];
+
     // relations
     public function task()
     {

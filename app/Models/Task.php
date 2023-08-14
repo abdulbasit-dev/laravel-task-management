@@ -18,6 +18,8 @@ class Task extends Model
 
     protected $guarded = [];
 
+    protected $with = ["assignTo:id,name"];
+
     // relations
     public function project()
     {
@@ -29,8 +31,8 @@ class Task extends Model
         return $this->hasMany(SubTask::class, "task_id");
     }
 
-    public function logs() {
+    public function logs()
+    {
         return $this->hasMany(TaskLog::class, "task_id");
     }
-
 }

@@ -20,10 +20,12 @@ class TaskResource extends JsonResource
             'result' => true,
             'message' => "Task details.",
             'status' => Response::HTTP_OK,
-            'data' =>[
+            'data' => [
                 'id' => $this->id,
                 'title' => $this->title,
                 "description" => $this->description,
+                "assign_to" => $this->assign_to,
+                "assign_to_name" => $this->assignTo->name ?? null,
                 "created_at" => $this->created_at->format('Y-m-d H:i:s'),
                 "due_date" => $this->due_date->format('Y-m-d H:i:s'),
                 "status" => $this->status->name,

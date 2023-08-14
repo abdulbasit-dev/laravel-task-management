@@ -21,7 +21,6 @@ class SubTaskController extends Controller
 
     public function show(Task $task, SubTask $subtask)
     {
-        $subtask->load("assignTo:id,name");
         return new SubTaskResource($subtask);
     }
 
