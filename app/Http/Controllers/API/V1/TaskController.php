@@ -184,7 +184,7 @@ class TaskController extends Controller
             $allowedTransitions = [
                 'Developer' => ['TODO' => 'IN_PROGRESS', 'IN_PROGRESS' => 'READY_FOR_TEST'],
                 'Tester' => ['READY_FOR_TEST' => 'PO_REVIEW'],
-                'Product Owner' => ['PO_REVIEW' => 'DONE', 'DONE' => 'IN_PROGRESS'],
+                'Product Owner' => ['PO_REVIEW' => 'DONE', 'DONE' => 'IN_PROGRESS', "TODO" => "REJECTED", "IN_PROGRESS" => "REJECTED",  "READY_FOR_TEST" => "REJECTED", "PO_REVIEW" => "REJECTED", "DONE" => "REJECTED"],
             ];
 
             if (!array_key_exists($userRole, $allowedTransitions)) {
