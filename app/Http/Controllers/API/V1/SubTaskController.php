@@ -7,12 +7,21 @@ use App\Http\Requests\SubTaskRequest;
 use App\Http\Resources\SubTaskResource;
 use App\Models\SubTask;
 use App\Models\Task;
+use App\Models\User;
+use App\Services\TaskAssignmentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
 class SubTaskController extends Controller
 {
+    protected $taskAssignmentService;
+
+    public function __construct(TaskAssignmentService $taskAssignmentService)
+    {
+        $this->taskAssignmentService = $taskAssignmentService;
+    }
+
     public function store(SubTaskRequest $request, Task $task)
     {
         $task->subTasks()->create($request->validated());
@@ -48,9 +57,19 @@ class SubTaskController extends Controller
         }
 
         try {
+            $user = auth()->user();
+            $assignedToUser = User::find($request->user_id);
+
+            // assignTo user should not be same as the authenticated user and and should not be a product owner
+            if ($user->id === $assignedToUser->id || $assignedToUser->hasRole('product_owner')) {
+                return $this->jsonResponse(false, __('User is not allowed to assign task.'), Response::HTTP_FORBIDDEN);
+            }
+
             $subtask->update([
                 "assign_to" => $request->user_id,
             ]);
+            $this->taskAssignmentService->sendAssignmentEmail($task, $assignedToUser->email);
+
 
             return $this->jsonResponse(true, __('Task assigned successfully!'), Response::HTTP_OK);
         } catch (\Throwable $th) {
