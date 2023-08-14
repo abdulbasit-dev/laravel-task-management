@@ -21,15 +21,17 @@ class TaskSeeder extends Seeder
 
         $faker = Factory::create();
 
-        foreach (range(1,20) as $index) {
+        foreach (range(1, 20) as $index) {
             $project = Project::inRandomOrder()->first();
-            Task::create([
-                "project_id" => $project->id,
-                "created_by" => User::role("product_owner")->inRandomOrder()->first()->id,
-                "title" => $faker->sentence(),
-                "description" => $faker->sentence(10),
-                "due_date" => $faker->dateTimeBetween(now(), "+3 days"),
-            ]);
+            Task::withoutEvents(function () use ($project, $faker) {
+                Task::create([
+                    "project_id" => $project->id,
+                    "created_by" => User::role("product_owner")->inRandomOrder()->first()->id,
+                    "title" => $faker->sentence(),
+                    "description" => $faker->sentence(10),
+                    "due_date" => $faker->dateTimeBetween(now(), "+3 days"),
+                ]);
+            });
         }
     }
 }
