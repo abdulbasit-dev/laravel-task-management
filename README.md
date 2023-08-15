@@ -40,6 +40,14 @@ To start using TaskWise, follow these steps:
    http://localhost:8000/api/v1
    ```  
 
+7. In the root directory find this replated postman file:
+    - [Laravel Task Management.postman_collection.json] the collection tha contain requests.
+    - [TaskWise Local.postman_environment.json] environment variables
+
+ **Please** import both of them and with you will be good to go :) 
+
+
+
 ## Dependencies
 
 TaskWise utilizes the following dependencies:
