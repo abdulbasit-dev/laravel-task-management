@@ -47,14 +47,16 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-         $this->authorize('view_user');
+        $this->authorize('view_user');
+
+        $user->load("tasks");
 
         return new UserResource($user);
     }
 
     public function update(UserRequest $request, User $user)
     {
-         $this->authorize('edit_user');
+        $this->authorize('edit_user');
 
         // begin transaction
         DB::beginTransaction();
@@ -79,7 +81,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-         $this->authorize('delete_user');
+        $this->authorize('delete_user');
 
         // begin transaction
         DB::beginTransaction();

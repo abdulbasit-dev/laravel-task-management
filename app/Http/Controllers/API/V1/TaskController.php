@@ -159,7 +159,7 @@ class TaskController extends Controller
 
             $this->taskAssignmentService->sendAssignmentEmail($task, $assignedToUser->email);
 
-            return $this->jsonResponse(true, __('Task assigned successfully!'), Response::HTTP_OK, $task);
+            return $this->jsonResponse(true, __('Task assigned successfully!'), Response::HTTP_OK);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -185,7 +185,7 @@ class TaskController extends Controller
             $allowedTransitions = [
                 'Developer' => ['TODO' => 'IN_PROGRESS', 'IN_PROGRESS' => 'READY_FOR_TEST'],
                 'Tester' => ['READY_FOR_TEST' => 'PO_REVIEW'],
-                'Product Owner' => ['PO_REVIEW' => 'DONE', 'DONE' => 'IN_PROGRESS'],
+                'Product Owner' => ['PO_REVIEW' => 'DONE', 'DONE' => 'IN_PROGRESS', "REJECTED" => "TODO"],
             ];
 
             if (!array_key_exists($userRole, $allowedTransitions)) {
@@ -195,20 +195,37 @@ class TaskController extends Controller
             $currentStatus = $task->status->name;
             $requestedStatus = $request->status;
 
-            // if requested status is REJECTED and role is not product owner then he can change to any status
-            if ($requestedStatus != 'REJECTED' && $userRole != 'Product Owner') {
-                if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
-                    return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY, [
-                        "user_role" => $userRole,
-                        "current_status" => $currentStatus,
-                        "requested_status" => $requestedStatus,
-                    ]);
-                }
-            }
+            // // if requested status is REJECTED
+            // if ($requestedStatus === 'REJECTED') {
+            //     // Check if the user is the Product Owner
+            //     if ($userRole !== 'Product Owner') {
+            //         return $this->jsonResponse(false, __('Only the Product Owner can reject tasks.'), Response::HTTP_FORBIDDEN, [
+            //             "user_role" => $userRole,
+            //             "current_status" => $currentStatus,
+            //             "requested_status" => $requestedStatus,
+            //         ]);
+            //     }
+            // } else {
+            //     // Check if the user's role is allowed to perform the transition
+            //     if (!array_key_exists($userRole, $allowedTransitions)) {
+            //         return $this->jsonResponse(false, __('User role is not allowed to change task status.'), Response::HTTP_FORBIDDEN);
+            //     }
+
+            //     // Check if the requested status transition is valid for the user's role
+            //     if (!array_key_exists($currentStatus, $allowedTransitions[$userRole]) || $allowedTransitions[$userRole][$currentStatus] !== $requestedStatus) {
+            //         return $this->jsonResponse(false, __('Invalid status transition for the user role.'), Response::HTTP_UNPROCESSABLE_ENTITY, [
+            //             "user_role" => $userRole,
+            //             "current_status" => $currentStatus,
+            //             "requested_status" => $requestedStatus,
+            //         ]);
+            //     }
+            // }
+
 
             // if task status us PO_REVIEW then assign task to product owner
             switch ($request->status) {
                 case 'PO_REVIEW':
+                    // return $task;
                     $task->assign_to = $task->created_by;
                     break;
 
@@ -236,7 +253,7 @@ class TaskController extends Controller
 
             $task->save();
 
-            return $this->jsonResponse(true, __('Task status updated successfully!'), Response::HTTP_OK, $task);
+            return $this->jsonResponse(true, __('Task status updated successfully!'), Response::HTTP_OK);
         } catch (\Throwable $th) {
             throw $th;
         }

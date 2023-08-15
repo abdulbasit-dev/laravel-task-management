@@ -24,7 +24,7 @@ class Task extends Model
 
     protected static function booted(): void
     {
-        static::saving(function (Task $task) {
+        static::updating(function (Task $task) {
             // save log for task
             $task->logs()->create([
                 "title" => $task->title,

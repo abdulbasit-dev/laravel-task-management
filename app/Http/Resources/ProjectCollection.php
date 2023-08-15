@@ -19,8 +19,7 @@ class ProjectCollection extends ResourceCollection
             'data' => $this->collection->map(function ($task) {
                 return [
                     'id' => $task->id,
-                    'name' => $task->title,
-                    "description" => $task->description,
+                    'name' => $task->name,
                     "create_at" => $task->created_at->format('Y-m-d H:i:s'),
                 ];
             }),

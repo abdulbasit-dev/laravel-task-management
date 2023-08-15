@@ -25,8 +25,17 @@ class UserResource extends JsonResource
                 'name' => $this->name,
                 "role" => str_replace("_", " ", Str::title($this->getRoleNames()->first())),
                 'email' => $this->email,
-                "task_count" => $this->tasks->count(),
                 "created_at" => $this->created_at->format('Y-m-d H:i:s'),
+                "task_count" => $this->tasks->count(),
+                "tasks" => $this->tasks->map(function ($task) {
+                    return [
+                        "id" => $task->id,
+                        "title" => $task->title,
+                        "description" => $task->description,
+                        "status" => $task->status,
+                        "created_at" => $task->created_at->format('Y-m-d H:i:s'),
+                    ];
+                }),
             ]
 
         ];

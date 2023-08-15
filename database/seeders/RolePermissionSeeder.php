@@ -16,6 +16,11 @@ class RolePermissionSeeder extends Seeder
     public function run()
     {
         $permissions  = [
+            "view_role",
+            "add_role",
+            "edit_role",
+            "delete_role",
+
             "view_user",
             "add_user",
             "edit_user",
