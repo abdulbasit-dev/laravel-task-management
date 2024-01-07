@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\V1\{
     UserController,
     TaskStatusController,
     TaskController,
-    SubtaskController,
 };
 
 use Illuminate\Support\Facades\Artisan;
@@ -59,12 +58,6 @@ Route::group(['prefix' => 'v1', "middleware"=>["throttle:30,1"]], function () {
         Route::post('tasks/{task}/assign-task', [TaskController::class, 'assignTask']);
         Route::post('tasks/{task}/change-status', [TaskController::class, 'changeStatus']);
         Route::apiResource('tasks', TaskController::class);
-
-        // subtasks
-        Route::post('tasks/{task}/subtasks/{subtask}/assign-subtask', [SubTaskController::class, 'assignSubTask']);
-        Route::apiResource('tasks.subtasks', SubtaskController::class);
-
-        // task transitions
 
     });
 });
