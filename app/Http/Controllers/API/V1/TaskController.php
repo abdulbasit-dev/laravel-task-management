@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\TaskStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AssignTaskRequest;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
@@ -31,7 +32,7 @@ class TaskController extends Controller
         $assignedTo = Arr::get($searchParams, "assigned_to", null);
 
         $tasks = Task::query()
-            ->with("assignTo:id,name", "logs")
+            ->with("assignTo:id,name", "subTasks:id,task_id,title,description,due_date", "parentTask:id,task_id,title,description,due_date")
             ->when($id, function ($query, $id) {
                 return $query->where("id", $id);
             })
@@ -124,17 +125,8 @@ class TaskController extends Controller
         }
     }
 
-    public function assignTask(Request $request, Task $task, TaskAssignmentService $taskAssignmentService)
+    public function assignTask(AssignTaskRequest $request, Task $task, TaskAssignmentService $taskAssignmentService)
     {
-        //validation
-        $validator = Validator::make($request->all(), [
-            "user_id" => ['required', 'exists:users,id'],
-        ]);
-
-        if ($validator->fails()) {
-            return $this->jsonResponse(false, __("The given data was invalid."), Response::HTTP_UNPROCESSABLE_ENTITY, null, $validator->errors()->all());
-        }
-
         try {
             $user = auth()->user();
             $assignedToUser = User::find($request->user_id);

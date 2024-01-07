@@ -33,6 +33,7 @@ class TaskRequest extends FormRequest
             "title"             => ['required', "string"],
             "description"       => ['required', "string"],
             "due_date"          => ['required', "date"],
+            "task_id"           => ['nullable', "exists:tasks,id"],
         ];
     }
 }

@@ -21,8 +21,8 @@ class TaskSeeder extends Seeder
 
         $faker = Factory::create();
 
-        foreach (range(1, 20) as $index) {
-            $project = Project::inRandomOrder()->first();
+        $project = Project::inRandomOrder()->first();
+        foreach (range(1, 2) as $index) {
             Task::withoutEvents(function () use ($project, $faker) {
                 Task::create([
                     "project_id" => $project->id,
