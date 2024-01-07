@@ -6,9 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 
-class UserRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
 
     public function failedValidation(Validator $validator)
@@ -28,20 +27,9 @@ class UserRequest extends FormRequest
 
     public function rules()
     {
-
-        if (request()->isMethod("POST")) {
-            $checkUniqueEmail = "unique:users,email";
-            $passwordRule = ['required', 'min:8'];
-        } elseif (request()->isMethod("PUT") || request()->isMethod("PATCH")) {
-            $checkUniqueEmail = "unique:users,email, " . $this->user->id;
-            $passwordRule = [];
-        }
-
         return [
-            "name"              => ['required'],
-            "email"             => ['required', $checkUniqueEmail],
-            "password"          => $passwordRule,
-            'role'              => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string', 'min:8'],
         ];
     }
 }

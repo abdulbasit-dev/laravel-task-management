@@ -3,28 +3,15 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Order;
-use App\Enums\OrderStatus;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        //validation
-        $validator = Validator::make($request->all(), [
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string' , 'min:8'],
-        ]);
-
-        if ($validator->fails()) {
-            return $this->jsonResponse(false, __('The given data was invalid.'), Response::HTTP_UNPROCESSABLE_ENTITY, null, $validator->errors()->all());
-        }
-
         $credentials = $request->all();
         //check email
         $user = User::where('email', $credentials['email'])->get()->first();
