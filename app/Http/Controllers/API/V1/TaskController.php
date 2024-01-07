@@ -32,7 +32,7 @@ class TaskController extends Controller
         $assignedTo = Arr::get($searchParams, "assigned_to", null);
 
         $tasks = Task::query()
-            ->with("assignTo:id,name", "subTasks:id,task_id,title,description,due_date", "parentTask:id,task_id,title,description,due_date")
+            ->with("assignTo:id,name", "subTasks:id,task_id,title,description,status,assign_to")
             ->when($id, function ($query, $id) {
                 return $query->where("id", $id);
             })
