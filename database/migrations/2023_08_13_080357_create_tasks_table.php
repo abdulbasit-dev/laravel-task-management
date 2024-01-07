@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("assign_to")->nullable()->constrained("users")->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId("project_id")->constrained("projects")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("task_id")->nullable()->constrained("tasks")->nullOnDelete()->cascadeOnUpdate();
             $table->text("title");
             $table->longText("description")->nullable();
             $table->timestamp("due_date")->nullable();

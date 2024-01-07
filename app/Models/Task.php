@@ -7,7 +7,6 @@ use App\Events\TaskDueDatePassedEvent;
 use App\Traits\ActionByTrait;
 use App\Traits\AssignToTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class Task extends Model
 {

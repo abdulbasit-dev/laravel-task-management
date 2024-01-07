@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\TaskStatus;
-use App\Events\TaskDueDatePassedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
@@ -15,19 +14,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class TaskController extends Controller
 {
-
-    protected $taskAssignmentService;
-
-    public function __construct(TaskAssignmentService $taskAssignmentService)
-    {
-        $this->taskAssignmentService = $taskAssignmentService;
-    }
 
     public function index(Request $request)
     {
@@ -133,7 +124,7 @@ class TaskController extends Controller
         }
     }
 
-    public function assignTask(Request $request, Task $task)
+    public function assignTask(Request $request, Task $task, TaskAssignmentService $taskAssignmentService)
     {
         //validation
         $validator = Validator::make($request->all(), [
@@ -157,7 +148,7 @@ class TaskController extends Controller
                 "assign_to" => $request->user_id,
             ]);
 
-            $this->taskAssignmentService->sendAssignmentEmail($task, $assignedToUser->email);
+            $taskAssignmentService->sendAssignmentEmail($task, $assignedToUser->email);
 
             return $this->jsonResponse(true, __('Task assigned successfully!'), Response::HTTP_OK);
         } catch (\Throwable $th) {
