@@ -10,8 +10,8 @@ To start using TaskWise, follow these steps:
 
 1. Clone the repository to your local machine:
    ```shell
-   git clone https://github.com/your-username/TaskWise.git
-   cd TaskWise
+   git clone https://github.com/your-username/laravel-taskwise.git
+   cd laravel-taskwise
    ```
 
 2. Install project dependencies using Composer:
